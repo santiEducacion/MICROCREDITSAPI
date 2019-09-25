@@ -10,40 +10,34 @@ const getAllUsers = (req,res)=>{
     res.send("Get all users")
 }
 
-//Create an user
-const createUser = (req,res)=>{
-    //call to bd
-    console.log('create',req.body)
+ // Create an user
+const createUser = (req, res) => {
+    console.log("BODY ", req.body.cedula)
 
-    //Buscar si la cedula del usuario ya existe
-    User.findOne({cedula:84088346})
-    .then((response)=>{
-        console.log("user", response)
-        //No se puede crear
-    })
-    .catch((error)=>{
-        console.log("error", error)
-        //Se puede crear en la bd
+    //Buscar si la cedula del usuario ya existe 
+    User.findOne({cedula: req.body.cedula})
+    .then((response) => {
+        console.log("user ", response)
+        // If response is not nul, the user already exists
+        if(response !== null) {
+            res.status(500).send({"error": "User alredy exists"})
+        }
 
-    })
-
-    /*
-    let newUser = new User(req.body)
-    newUser.save()
-        .then((response)=>{
-            console.log("response", response)
-            //res.status(201).send("<h1>OK</h1>")
-            //send response in JSON format
-            res.status(201).send({"mensaje": "Usuario creado correctamente", "status":201})
+        // Create user when not exists
+        let newUser = new User(req.body)
+        newUser.save()
+        .then((response) => {
+            // send response in JSON format
+            res.status(201).send({"mensaje": "Usuario creado correctamente", "status": 201})
         })
-        .catch((error)=>{
-            console.log("*****error",error.message)
-            //res.status(404).send("<h1>Not Found</h1>")
-            //send response in JSON format
-            res.status(404).send({"Error": error.message, "status":404})
-        })*/
-    
-    
+        .catch((error) => {
+            // send response in JSON format
+            res.status(404).send({"error": error.message, "status":404})
+        })
+    })
+    .catch((error) => {
+        console.log("****error", error)
+    })
 }
 
 //Delete an user
