@@ -1,6 +1,7 @@
 let express = require("express");
 let bodyParser = require("body-parser")
 let userRouter = require("./routes/user.router")
+let creditRouter = require("./routes/credit.router")
 
 let app = express();
 
@@ -15,3 +16,6 @@ app.get("/", (req,res)=>{
 //Config route for /api/users
 app.use("/api/users", userRouter)
 module.exports = app;
+
+//config route for /api/credit
+app.use("/api/credits", creditRouter)

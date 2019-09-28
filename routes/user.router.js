@@ -7,10 +7,10 @@ userRouter
     //Obtener todo los usuarios Get All Users
     .get('/', userCtr.getAllUsers)
     //Create an user
-    .post('/create', userCtr.createUser)
+    .post('/create', userCtr.find, userCtr.createUser)
     // Drop an user
-    .delete('/delete',userCtr.deleteUser)
+    .delete('/delete/:_id',userCtr.deleteUser)
     //update the user
-    .put('/update',userCtr.updateUser)
+    .put('/update/:id',userCtr.updateUser)
 
 module.exports = userRouter

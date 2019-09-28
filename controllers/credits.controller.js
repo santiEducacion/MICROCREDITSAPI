@@ -1,13 +1,12 @@
-let mongoose = require("mongoose")
-let User = require("../models/user.model")
 let DB = require("../config/database")
+let Credit = require("../models/credit.model")
 
-// Get all users
-const getAllUsers = async(req, res) => {
+// Get all Credits
+const getAllCredits = async(req, res) => {
     //open DB
     DB.connect()
     
-    await User.find()
+    await Credit.find()
     .then(response =>{
         res.status(200).send({"results":response})
     })
@@ -20,17 +19,15 @@ const getAllUsers = async(req, res) => {
 
 // Create middleware
 const find = (req, res, next) => {
-
     //open DB
     DB.connect()
 
-    //Buscar si la cedula del usuario ya existe 
-    User.findOne({cedula: req.body.cedula})
+    //Buscar si el id del credito ya existe 
+    Credit.findById(req.body._id)
     .then((response) => {
-        console.log("user ", response)
         // If response is not nul, the user already exists
         if(response !== null) {
-            return res.status(500).send({"error": "User alredy exists"})
+            return res.status(500).send({"error": "Credit alredy exists"})
         }
         // Can be user
         else {
@@ -39,22 +36,19 @@ const find = (req, res, next) => {
     })
     .catch((error) => {
         res.send({"error":error.message})
-                //Close DB
-                DB.disconnect()
-
+        //Close DB
+        DB.disconnect()
     })
-
 }
 
-
-// Create an user
-const createUser = async(req, res) => {
+// Create an Credit
+const createCredit = async(req, res) => {
     // Create user when not exists
-    let newUser = new User(req.body)
-    await newUser.save()
+    let newCredit = new Credit(req.body)
+    await newCredit.save()
     .then((response) => {
         // send response in JSON format
-        res.status(201).send({"mensaje": "Usuario creado correctamente", "status": 201})
+        res.status(201).send({"mensaje": "credito creado correctamente", "status": 201})
     })
     .catch((error) => {
         // send response in JSON format
@@ -62,21 +56,20 @@ const createUser = async(req, res) => {
     })
         //Close DB
         DB.disconnect()
-
 }
 
-// Delete an user
-const deleteUser = async(req, res) => {
+// Delete an credit
+const deleteCredit = async(req, res) => {
     //open DB
     DB.connect()
 
-    await User.findById(req.params._id)
-    .then(async(userFound)=>{
-        //Delete user
-       await userFound.remove()
-        .then((userDeleted)=>{
-            //The user has beed delete
-            res.status(200).send({"message": "User Deleted", "user":userDeleted})
+    await Credit.findById(req.params._id)
+    .then(async(creditFound)=>{
+        //Delete credit
+       await creditFound.remove()
+        .then((creditDeleted)=>{
+            //The credit has beed delete
+            res.status(200).send({"message": "credit Deleted", "credit":creditDeleted})
         })
         .catch((error)=>{
             res.send({"error": error.message})
@@ -89,14 +82,14 @@ const deleteUser = async(req, res) => {
     DB.disconnect()
 }
 
-// Update an user
-const updateUser = (req, res) => {
+// Update an credit
+const updateCredit = (req, res) => {
     //Open DB
     DB.connect()
 
     /*
     //Way1
-    User.update({nombre: "Andrea"},{nombre: "Andrea Marcela"})
+    Credit.update({plazo: 18},{plazo: 36})
     .then(()=>{
         res.send("update")
     })
@@ -108,8 +101,8 @@ const updateUser = (req, res) => {
     
     //Way 2
     User.findById(req.params._id)
-    .then((userFound)=>{
-        User.update(userFound, req.body)
+    .then((creditFound)=>{
+        User.update(creditFound, req.body)
         .then(()=>{
             res.send("update")
         })
@@ -125,14 +118,14 @@ const updateUser = (req, res) => {
     
 
     //Way 3
-       /* User.findById(req.params._id)    
-        .then(userFound => {
-        let userToSave = Object.assign(userFound, req.body)  // esta forma hace match entre lo que esta en la base de datos y el req.body
-        userToSave.save()
+       /* Credit.findById(req.params._id)    
+        .then(creditFound => {
+        let userToSave = Object.assign(creditFound, req.body)  // esta forma hace match entre lo que esta en la base de datos y el req.body
+        creditToSave.save()
      
         .then(()=>{   //** Si se actualizo responde OK */
-         //The User has beed Update
-       /*  res.status(200).send({ message: "User update"});
+         //The credit has beed Update
+       /*  res.status(200).send({ message: "credit update"});
         })
         .catch(()=>{
         res.send("no")
@@ -150,9 +143,9 @@ const updateUser = (req, res) => {
 
 
 module.exports = {
-    getAllUsers,
-    createUser,
-    deleteUser,
-    updateUser,
+    getAllCredits,
+    createCredit,
+    deleteCredit,
+    updateCredit,
     find
 }
