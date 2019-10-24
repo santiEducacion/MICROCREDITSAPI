@@ -66,7 +66,7 @@ const deleteCredit = async(req, res) => {
     await Credit.findById(req.params._id)
     .then(async(creditFound)=>{
         //Delete credit
-       await creditFound.remove()
+    await creditFound.remove()
         .then((creditDeleted)=>{
             //The credit has beed delete
             res.status(200).send({"message": "credit Deleted", "credit":creditDeleted})
@@ -87,22 +87,10 @@ const updateCredit = (req, res) => {
     //Open DB
     DB.connect()
 
-    /*
-    //Way1
-    Credit.update({plazo: 18},{plazo: 36})
-    .then(()=>{
-        res.send("update")
-    })
-    .catch(()=>{
-        res.send("error")
-    })
-    */
-    
-    
     //Way 2
-    User.findById(req.params._id)
+    Credit.findById(req.params._id)
     .then((creditFound)=>{
-        User.update(creditFound, req.body)
+        Credit.update(creditFound, req.body)
         .then(()=>{
             res.send("update")
         })
@@ -116,30 +104,7 @@ const updateCredit = (req, res) => {
         DB.disconnect()
     })
     
-
-    //Way 3
-       /* Credit.findById(req.params._id)    
-        .then(creditFound => {
-        let userToSave = Object.assign(creditFound, req.body)  // esta forma hace match entre lo que esta en la base de datos y el req.body
-        creditToSave.save()
-     
-        .then(()=>{   //** Si se actualizo responde OK */
-         //The credit has beed Update
-       /*  res.status(200).send({ message: "credit update"});
-        })
-        .catch(()=>{
-        res.send("no")
-       })
-  
-  
-    })
-  
-    .catch(error => {
-      res.send({ error: error.message });
-    });*/
-  
-  
-  };
+};
 
 
 module.exports = {
